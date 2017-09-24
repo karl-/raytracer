@@ -1,0 +1,16 @@
+{
+	"folders":
+	[
+		{
+			"path": ".",
+			"folder_exclude_patterns":[
+				"ConsolePro"
+			],
+			"file_exclude_patterns":[
+				"*.meta",
+				"*.unity",
+				"*.mat",
+			]
+		}
+	]
+}
