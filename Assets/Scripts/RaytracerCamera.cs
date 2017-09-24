@@ -26,6 +26,7 @@ namespace Parabox.Raytracer
 		private Vector3 m_SceneLowerLeft;
 		private float m_SceneWidth;
 		private float m_SceneHeight;
+		private Hittable[] m_Hittables = null;
 
 		private void Awake()
 		{
@@ -36,6 +37,10 @@ namespace Parabox.Raytracer
 			Assert.IsNotNull(m_Quad);
 			Assert.IsNotNull(m_Camera);
 			Assert.IsNotNull(m_OrthoCamera);
+
+			m_Hittables = FindObjectsOfType<Hittable>();
+
+			Debug.Log("hittables: " + m_Hittables.Length);
 
 			InvokeRepeating("Render", 0f, m_FrameRate);
 		}
@@ -89,31 +94,21 @@ namespace Parabox.Raytracer
 			BlitColorBuffer();
 		}
 
-		private float HitSphere(Ray ray, Vector3 center, float radius)
-		{
-			Vector3 oc = ray.origin - center;
-			float a = Vector3.Dot(ray.direction, ray.direction);
-			float b = Vector3.Dot(oc, ray.direction) * 2f;
-			float c = Vector3.Dot(oc, oc) - (radius * radius);
-			float d = b*b - 4*a*c;
-			return d < 0f ? -1f : (-b - Mathf.Sqrt(d)) / (2f * a);
-		}
-
 		private Color32 GetColor(Ray ray)
 		{
 			// Sphere
-			Vector3 sphereCenter = new Vector3(0f, 0f, 5f);
-			float hit = HitSphere(ray, sphereCenter, 1f);
+			HitRecord record = new HitRecord();
+			RayHit hit = new RayHit();
 
-			if(hit > 0f)
+			foreach(Hittable h in m_Hittables)
+				hit = h.DoRaycast(ray, 0f, 0f, ref record);
+
+			if(hit.IsValid())
 			{
-				Vector3 n = ray.PointAtParameter(hit) - sphereCenter;
-				n.Normalize();
-
 				return new Color32(
-					(byte) Mathf.Clamp(Mathf.Abs(n.x) * 255f, 0, 255),
-					(byte) Mathf.Clamp(Mathf.Abs(n.y) * 255f, 0, 255),
-					(byte) Mathf.Clamp(Mathf.Abs(n.z) * 255f, 0, 255),
+					(byte) Mathf.Clamp(Mathf.Abs(hit.normal.x) * 255f, 0, 255),
+					(byte) Mathf.Clamp(Mathf.Abs(hit.normal.y) * 255f, 0, 255),
+					(byte) Mathf.Clamp(Mathf.Abs(hit.normal.z) * 255f, 0, 255),
 					(byte) 255 );
 			}
 

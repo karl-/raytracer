@@ -2,16 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Hittable : MonoBehaviour
+namespace Parabox.Raytracer
 {
-
-	// Use this for initialization
-	void Start () {
-
-	}
-
-	// Update is called once per frame
-	void Update () {
-
+	/**
+	 * An object that is visible to the raytracer camera.
+	 */
+	public abstract class Hittable : MonoBehaviour
+	{
+		public abstract RayHit DoRaycast(Ray ray, float min, float max, ref HitRecord record);
 	}
 }
