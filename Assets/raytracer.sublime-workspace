@@ -120,20 +120,64 @@
 	"buffers":
 	[
 		{
-			"file": "RaytracerCamera.cs",
+			"file": "Scripts/Ray.cs",
 			"settings":
 			{
-				"buffer_size": 2571,
+				"buffer_size": 464,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "Scripts/RaytracerCamera.cs",
+			"settings":
+			{
+				"buffer_size": 7200,
 				"encoding": "UTF-8 with BOM",
 				"line_ending": "Unix"
 			}
 		},
 		{
-			"file": "Hittable.cs",
+			"file": "Scripts/Hittable.cs",
 			"settings":
 			{
-				"buffer_size": 235,
+				"buffer_size": 320,
 				"encoding": "UTF-8 with BOM",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "Scripts/RayHit.cs",
+			"settings":
+			{
+				"buffer_size": 507,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "Scripts/HitRecord.cs",
+			"settings":
+			{
+				"buffer_size": 65,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "Scripts/SphereHittable.cs",
+			"settings":
+			{
+				"buffer_size": 758,
+				"encoding": "UTF-8 with BOM",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "raytracer.sublime-project",
+			"settings":
+			{
+				"buffer_size": 176,
 				"line_ending": "Unix"
 			}
 		}
@@ -204,8 +248,21 @@
 		"side_bar_visible": false,
 		"status_bar_visible": false
 	},
+	"expanded_folders":
+	[
+		"/C/Users/karl/Desktop/raytracer/Assets",
+		"/C/Users/karl/Desktop/raytracer/Assets/Scripts",
+		"/C/Users/karl/Desktop/raytracer/Assets/Shaders"
+	],
 	"file_history":
 	[
+		"/D/github/pb_Profiler/Assets/pb_Profiler/Classes/pb_Sample.cs",
+		"/D/github/pb_Profiler/Assets/pb_Profiler/Classes/pb_Profiler.cs",
+		"/C/Users/karl/Desktop/raytracer/Assets/Shaders/UnlitTexture.shader",
+		"/C/Users/karl/Desktop/raytracer/Assets/raytracer.sublime-project",
+		"/C/Users/karl/Desktop/raytracer/Assets/RaytracerCamera.cs",
+		"/C/Users/karl/Desktop/raytracer/Assets/Hittable.cs",
+		"/C/Users/karl/Desktop/raytracer/Assets/Scripts/RaytracerCamera.cs",
 		"/C/Users/karl/procore3d/probuilder2/probuilder2.0/Assets/ProCore/ProBuilder/Editor/EditorCore/pb_Selection.cs",
 		"/C/Users/karl/procore3d/probuilder2/probuilder2.0/Assets/ProCore/ProBuilder/Editor/EditorCore/pbUndo.cs",
 		"/C/Users/karl/procore3d/probuilder2/probuilder2.0/Assets/ProCore/ProBuilder/Editor/EditorCore/pb_Object_Editor.cs",
@@ -214,7 +271,6 @@
 		"/C/Users/karl/procore3d/probuilder2/probuilder2.0/Assets/ProCore/ProBuilder/Classes/ClassesCore/pb_Object.cs",
 		"/C/Users/karl/procore3d/probuilder2/probuilder2.0/Assets/ProCore/ProBuilder/Classes/ClassesCore/pb_Log.cs",
 		"/C/Users/karl/Desktop/raytracer/.gitignore",
-		"/C/Users/karl/Desktop/raytracer/Assets/Hittable.cs",
 		"/C/Users/karl/procore3d/probuilder2/probuilder2.0/Assets/ProCore/ProBuilder/Editor/EditorCore/pb_Hierarchy_Listener.cs",
 		"/C/Users/karl/Desktop/raytracer/Assets/ConsolePro/Examples/Editor/ConsoleProCallbacks.cs",
 		"/C/Users/karl/Desktop/tmp.cs",
@@ -327,17 +383,11 @@
 		"/C/Users/karl/procore3d/probuilder2/probuilder2.0/Assets/ProCore/ProBuilder/API Examples/Editor/EditorCallbackViewer.cs",
 		"/C/Users/karl/procore3d/probuilder2/probuilder2.0/Assets/ProCore/ProBuilder/Editor/pb_MenuItems.cs",
 		"/C/Users/karl/procore3d/probuilder2/.gitignore",
-		"/C/Users/karl/procore3d/probuilder2/probuilder2.0/Assets/MeshHandles/Editor/LineHandle.cs",
-		"/C/Users/karl/procore3d/probuilder2/probuilder2.0/Assets/MeshHandles/Editor/MeshHandleUtility.cs",
-		"/C/Users/karl/procore3d/probuilder2/probuilder2.0/Assets/ProCore/ProBuilder/Editor/EditorCore/pb_DebugWindow.cs",
-		"/C/Users/karl/.bash_profile",
-		"/C/Users/karl/procore3d/probuilder2/probuilder2.0/Assets/ProCore/ProBuilder/Classes/ClassesEditing/pb_ImportMesh.cs",
-		"/C/Users/karl/procore3d/probuilder2/probuilder2.0/Assets/MeshHandles/Editor/Handle.cs",
-		"/C/Users/karl/procore3d/probuilder2/probuilder2.0/Assets/MeshVisualizer.cs"
+		"/C/Users/karl/procore3d/probuilder2/probuilder2.0/Assets/MeshHandles/Editor/LineHandle.cs"
 	],
 	"find":
 	{
-		"height": 26.0
+		"height": 49.0
 	},
 	"find_in_files":
 	{
@@ -351,6 +401,48 @@
 		"case_sensitive": true,
 		"find_history":
 		[
+			"m_FpsRect",
+			"m_LastFrameDuration",
+			"System.Timer",
+			"Timer",
+			"Reset",
+			"m_LastFrameDuration",
+			"index++",
+			"[index",
+			"y * m_Width + x",
+			"index",
+			"m_AASamples",
+			"m_InvAASamples",
+			"r",
+			"allowHDR",
+			"m_Fov",
+			"float",
+			"m_Fov",
+			"AA_SAMPLES",
+			"m_RandomDouble",
+			" =",
+			"m_ShowDebugWindow",
+			"param",
+			"Empty",
+			"m_Hittables",
+			"radius",
+			"RayHit",
+			"new Vector3(0f, 0f, 3f)",
+			"hit",
+			"toSphere",
+			"m_SceneLowerLeft",
+			"m_Camera",
+			"m_DebugWindowRect",
+			"m_Camera",
+			"GetComponent",
+			"m_LowerLeft",
+			"Vector3",
+			"m_SceneLowerLeft",
+			"m_OrthoCamera",
+			"m_SceneWidth",
+			"COLOR_SKY_BLUE",
+			"origin",
+			"meta"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -373,11 +465,180 @@
 			[
 				{
 					"buffer": 0,
-					"file": "RaytracerCamera.cs",
+					"file": "Scripts/Ray.cs",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 2571,
+						"buffer_size": 464,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								254,
+								254
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Unity3D/UnityC#.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 5,
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "Scripts/RaytracerCamera.cs",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 7200,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								2894,
+								2894
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Unity3D/UnityC#.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 2126.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "Scripts/Hittable.cs",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 320,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								250,
+								250
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Unity3D/UnityC#.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "Scripts/RayHit.cs",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 507,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								482,
+								491
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Unity3D/UnityC#.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 2,
+					"type": "text"
+				},
+				{
+					"buffer": 4,
+					"file": "Scripts/HitRecord.cs",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 65,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								59,
+								59
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Unity3D/UnityC#.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 6,
+					"type": "text"
+				},
+				{
+					"buffer": 5,
+					"file": "Scripts/SphereHittable.cs",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 758,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								746,
+								746
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Unity3D/UnityC#.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 4,
+					"type": "text"
+				},
+				{
+					"buffer": 6,
+					"file": "raytracer.sublime-project",
+					"semi_transient": true,
+					"settings":
+					{
+						"buffer_size": 176,
 						"regions":
 						{
 						},
@@ -390,42 +651,14 @@
 						],
 						"settings":
 						{
-							"syntax": "Packages/Unity3D/UnityC#.tmLanguage",
+							"syntax": "Packages/JavaScript/JSON.sublime-syntax",
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 1,
-					"type": "text"
-				},
-				{
-					"buffer": 1,
-					"file": "Hittable.cs",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 235,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								79,
-								79
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Unity3D/UnityC#.tmLanguage"
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 0,
+					"stack_index": 3,
 					"type": "text"
 				}
 			]

@@ -6,6 +6,9 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.Assertions;
 using Ray = Parabox.Raytracer.Ray;
+#if RAY_DEBUG
+using System.Diagnostics;
+#endif
 
 namespace Parabox.Raytracer
 {
@@ -22,42 +25,74 @@ namespace Parabox.Raytracer
 		private Color32[] m_ColorBuffer;
 		// Driven by camera
 		private int m_Width = 0, m_Height = 0;
+		private int m_Fov = 60;
 		private float m_FrameRate = 1f;
 		private Vector3 m_SceneLowerLeft;
 		private float m_SceneWidth;
 		private float m_SceneHeight;
 		private Hittable[] m_Hittables = null;
 
+		// Is anti-aliasing enabled?
+		private bool m_EnableAA = false;
+		// Anti-aliasing random number generator.
+		private System.Random m_RandomDouble = new System.Random();
+		// Number of random samples per-pixel when anti-aliasing is enabled.
+		private uint m_AASamples = 8;
+		private float m_InvAASamples = 1f / 8f;
+
 		private void Awake()
 		{
 			m_Quad = GetComponentsInChildren<MeshFilter>().First(x => x.gameObject.name.Equals("Billboard")).gameObject;
-			m_OrthoCamera = GetComponentsInChildren<Camera>().First(x => x.orthographic);
+
+			// Set up orthographic camera to actually render the scene
+			GameObject orthoCam = new GameObject();
+			orthoCam.name = "Raytracer Orthographic Camera";
+			orthoCam.transform.SetPositionAndRotation(Vector3.zero, Quaternion.identity);
+			orthoCam.transform.SetParent(transform, false);
+			m_OrthoCamera = orthoCam.AddComponent<Camera>();
+			m_OrthoCamera.orthographic = true;
+			m_OrthoCamera.clearFlags = CameraClearFlags.SolidColor;
+			m_OrthoCamera.orthographicSize = .5f;
+			m_OrthoCamera.allowHDR = false;
+			m_OrthoCamera.allowMSAA = false;
+
 			m_Camera = GetComponent<Camera>();
 
 			Assert.IsNotNull(m_Quad);
 			Assert.IsNotNull(m_Camera);
 			Assert.IsNotNull(m_OrthoCamera);
 
-			m_Hittables = FindObjectsOfType<Hittable>();
+			m_InvAASamples = 1f / m_AASamples;
 
-			Debug.Log("hittables: " + m_Hittables.Length);
+			m_Hittables = FindObjectsOfType<Hittable>();
 
 			InvokeRepeating("Render", 0f, m_FrameRate);
 		}
 
 #if RAY_DEBUG
+		private Stopwatch m_FrameTimer = new Stopwatch();
 		private Rect m_DebugWindowRect = new Rect(4, 4, 350, 400);
+		private bool m_ShowDebugWindow = false;
+		private double m_LastFrameDuration = 0.0;
+		private Rect m_FpsRect = new Rect(0f, 8f, 64f, 24f);
 
 		private void OnGUI()
 		{
-			m_DebugWindowRect = GUILayout.Window("m_DebugWindow".GetHashCode(), m_DebugWindowRect, DebugWindow, "Debug Window");
+			// Always show the last frame duration
+			m_FpsRect.x = (Screen.width - m_FpsRect.width) - 8;
+			GUI.Box(m_FpsRect, m_LastFrameDuration.ToString("F3"));
+
+			// Toggle debug window on/off
+			if( Event.current.type == EventType.KeyUp && Event.current.keyCode == KeyCode.BackQuote)
+				m_ShowDebugWindow = !m_ShowDebugWindow;
+
+			if(m_ShowDebugWindow)
+				m_DebugWindowRect = GUILayout.Window("m_DebugWindow".GetHashCode(), m_DebugWindowRect, DebugWindow, "Debug Window");
 		}
 
 		private void DebugWindow(int id)
 		{
-			GUILayout.Label("m_SceneLowerLeft: " + m_SceneLowerLeft.ToString());
-			GUILayout.Label("m_SceneWidth: " + m_SceneWidth);
-			GUILayout.Label("m_SceneHeight: " + m_SceneHeight);
+			m_EnableAA = GUILayout.Toggle(m_EnableAA, "Anti-aliasing Enabled");
 		}
 #endif
 
@@ -82,16 +117,23 @@ namespace Parabox.Raytracer
 
 		public void Render()
 		{
+#if RAY_DEBUG
+			m_FrameTimer.Reset();
+			m_FrameTimer.Start();
+#endif
+
 			// Set quad size and camera dimensions
 			SetupCamera();
-
-			// ClearBuffer();
 
 			// Do ray
 			DoRays();
 
 			// Render texture
 			BlitColorBuffer();
+#if RAY_DEBUG
+			m_FrameTimer.Stop();
+			m_LastFrameDuration = m_FrameTimer.ElapsedMilliseconds / 1000.0;
+#endif
 		}
 
 		private Color32 GetColor(Ray ray)
@@ -119,16 +161,49 @@ namespace Parabox.Raytracer
 
 		private void DoRays()
 		{
-			Ray ray = new Ray(Vector3.zero, Vector3.zero);
+			Ray ray = new Ray(Vector3.zero, new Vector3(0f, 0f, m_SceneLowerLeft.z));
+			int index = -1;
 
-			for(int y = 0; y < m_Height; y++)
+			if(m_EnableAA)
 			{
-				for(int x = 0; x < m_Width; x++)
+
+				for(int y = 0; y < m_Height; y++)
 				{
-					float u = x / (float) m_Width;
-					float v = y / (float) m_Height;
-					ray.direction = new Vector3(m_SceneLowerLeft.x + (u * m_SceneWidth), m_SceneLowerLeft.y + (v * m_SceneHeight), m_SceneLowerLeft.z);
-					m_ColorBuffer[y * m_Width + x] = GetColor(ray);
+					for(int x = 0; x < m_Width; x++)
+					{
+						int r = 0, g = 0, b = 0;
+						for(int n = 0; n < m_AASamples; n++)
+						{
+							float u = (x + (float)m_RandomDouble.NextDouble()) / (float) m_Width;
+							float v = (y + (float)m_RandomDouble.NextDouble()) / (float) m_Height;
+							ray.direction.x = m_SceneLowerLeft.x + (u * m_SceneWidth);
+							ray.direction.y = m_SceneLowerLeft.y + (v * m_SceneHeight);
+							Color32 res = GetColor(ray);
+							r += res.r;
+							g += res.g;
+							b += res.b;
+						}
+
+						m_ColorBuffer[++index] = new Color32(
+							(byte) Mathf.Clamp(r * m_InvAASamples, 0, 255),
+							(byte) Mathf.Clamp(g * m_InvAASamples, 0, 255),
+							(byte) Mathf.Clamp(b * m_InvAASamples, 0, 255),
+							255 );
+					}
+				}
+			}
+			else
+			{
+				for(int y = 0; y < m_Height; y++)
+				{
+					for(int x = 0; x < m_Width; x++)
+					{
+						float u = x / (float) m_Width;
+						float v = y / (float) m_Height;
+						ray.direction.x = m_SceneLowerLeft.x + (u * m_SceneWidth);
+						ray.direction.y = m_SceneLowerLeft.y + (v * m_SceneHeight);
+						m_ColorBuffer[++index] = GetColor(ray);
+					}
 				}
 			}
 		}
@@ -137,12 +212,14 @@ namespace Parabox.Raytracer
 		{
 			int w = (int) m_OrthoCamera.pixelRect.width;
 			int h = (int) m_OrthoCamera.pixelRect.height;
+			int f = (int) m_Camera.fieldOfView;
 
-			if(w == m_Width && h == m_Height)
+			if(w == m_Width && h == m_Height && f == m_Fov)
 				return;
 
 			m_Width = w;
 			m_Height = h;
+			m_Fov = f;
 
 			m_ColorBuffer = new Color32[m_Width * m_Height];
 
